@@ -1,6 +1,11 @@
 package com.android.ime;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.inputmethodservice.InputMethodService;
+import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -14,7 +19,7 @@ import com.android.ime.keyboard.KeyBoard;
  *  输入法状态改变的时候，需要调用updateInputViewShown()来重新估计一下
  */
 public class InputMethodEasyService extends InputMethodService implements KeyboardActionListener {
-	
+
 	/**
 	 * http://api.apkbus.com/reference/android/view/inputmethod/InputConnection.html
 	 */
@@ -44,6 +49,10 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
             revertDoubleSpace()) {
             revertSwapPunctuation()) {
             resetCachesUponCursorMove
+            
+            
+            ###
+            getWindow().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	 */
 	
 	/**
@@ -52,6 +61,23 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		/* 注册输入法广播 */
+		registerIMEReceiver();
+	}
+	
+	/**
+	 * 注册一些安装，卸载的广播.
+	 */
+	private void registerIMEReceiver() {
+		final IntentFilter filter = new IntentFilter();
+		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		filter.addAction(AudioManager.RINGER_MODE_CHANGED_ACTION);
+//		registerReceiver(mReceiver, filter);
+		final IntentFilter packageFilter = new IntentFilter();
+		packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+		packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+//		packageFilter.addDataScheme(SCHEME_PACKAGE);
+//		registerReceiver(mDictionaryPackInstallReceiver, packageFilter);
 	}
 	
 	/**
@@ -73,6 +99,7 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting) {
+		mConnection = getCurrentInputConnection();
 		super.onStartInput(attribute, restarting);
 	}
 	
@@ -85,7 +112,6 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	public View onCreateInputView() {
 		View view = getLayoutInflater().inflate(R.layout.main_keyboard_view,
 				null);
-//		mConnection = getCurrentInputConnection();
 		return view;
 	}
 
@@ -95,17 +121,7 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public View onCreateCandidatesView() {
-		View view = getLayoutInflater().inflate(R.layout.cand_keyboard_view,
-				null);
-		view.findViewById(R.id.button1).setOnClickListener(
-				new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						getCurrentInputConnection();
-					}
-				});
-		return view;
+		return super.onCreateCandidatesView();
 	}
 	
 	/**
@@ -115,15 +131,43 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public void onStartInputView(EditorInfo info, boolean restarting) {
+//		getWindow().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		super.onStartInputView(info, restarting);
 	}
 	
 	/**
-	 * 它在另外的客户端和该输入法连接时调用<p>
+	 * 另外的客户端和该输入法连接时调用<p>
 	 */
 	@Override
 	public void onBindInput() {
 		super.onBindInput();
+	}
+	
+	/**
+	 * 处理键盘输入.
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		 case KeyEvent.KEYCODE_NUMPAD_0:
+         case KeyEvent.KEYCODE_NUMPAD_1:
+         case KeyEvent.KEYCODE_NUMPAD_2:
+         case KeyEvent.KEYCODE_NUMPAD_3:
+         case KeyEvent.KEYCODE_NUMPAD_4:
+         case KeyEvent.KEYCODE_NUMPAD_5:
+         case KeyEvent.KEYCODE_NUMPAD_6:
+         case KeyEvent.KEYCODE_NUMPAD_7:
+         case KeyEvent.KEYCODE_NUMPAD_8:
+         case KeyEvent.KEYCODE_NUMPAD_9:
+        	 if (event.isNumLockOn()) {
+                 onTextInput(Integer.toString(keyCode-KeyEvent.KEYCODE_NUMPAD_0));
+             }
+        	 return true;
+
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
@@ -141,6 +185,14 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	        case KeyBoard.CODE_ACTION_ENTER:
 	        	break;
 		  }
+		  
+	}
+
+	@Override
+	public void onTextInput(CharSequence text) {
+		mConnection.beginBatchEdit();
+		mConnection.commitText(text, 1); // 输入文本.
+		mConnection.endBatchEdit();
 	}
 
 }

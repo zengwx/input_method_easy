@@ -51,4 +51,13 @@
         android:layout_alignLeft="@+id/editText4"
         android:ems="10" />
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/editText2"
+        android:layout_marginLeft="71dp"
+        android:text="Button" />
+
 </RelativeLayout>

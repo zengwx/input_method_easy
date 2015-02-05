@@ -12,11 +12,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
-		Context context = getApplicationContext();
-		LayoutInflater localinflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		localinflater.from(context);
-		localinflater.inflate(R.layout.activity_main, null, true);
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override
