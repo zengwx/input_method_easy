@@ -3,6 +3,11 @@ package com.android.ime.keyboard;
 public class KeyBoardID {
 
 	public static final int MODE_TEXT = 0;
+	//
+	public static final int MODE_URL = 1;
+	public static final int MODE_EMAIL = 2;
+	public static final int MODE_IM = 3;
+	//
 	public static final int MODE_PHONE = 4;
 	public static final int MODE_NUMBER = 5;
 	// 日期，时间

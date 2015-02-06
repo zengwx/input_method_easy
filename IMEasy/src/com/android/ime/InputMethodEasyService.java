@@ -122,25 +122,46 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 		final int variation = inputType & InputType.TYPE_MASK_VARIATION;
 		// 根据 eidttext inputtype 返回软键盘类型.
 		switch (inputType & InputType.TYPE_MASK_CLASS) {
-		case InputType.TYPE_CLASS_NUMBER:
+		case InputType.TYPE_CLASS_NUMBER: // 数字键盘.
 			return KeyBoardID.MODE_NUMBER;
-		case InputType.TYPE_CLASS_PHONE:
+		case InputType.TYPE_CLASS_PHONE: // 显示符号键盘.
 			return KeyBoardID.MODE_PHONE;
-		case InputType.TYPE_CLASS_DATETIME: // 日期，时间.
+		case InputType.TYPE_CLASS_DATETIME: // 日期，时间. 文本输入框要求输入数字或日期时.
 			 switch (variation) {
              case InputType.TYPE_DATETIME_VARIATION_DATE:
-                 return KeyBoardID.MODE_DATE; // 
+                 return KeyBoardID.MODE_DATE; 
              case InputType.TYPE_DATETIME_VARIATION_TIME:
                  return KeyBoardID.MODE_TIME;
              default: // InputType.TYPE_DATETIME_VARIATION_NORMAL
                  return KeyBoardID.MODE_DATETIME;
+             }
+		case InputType.TYPE_CLASS_TEXT: // 显示输入字母的软键盘.
+//			 if (InputTypeUtils.isEmailVariation(variation)) {
+			if (true) {
+                 return KeyBoardID.MODE_EMAIL;
+             } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
+                 return KeyBoardID.MODE_URL;
+             } else if (variation == InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE) {
+                 return KeyBoardID.MODE_IM;
+             } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                 return KeyBoardID.MODE_TEXT;
+             } else {
+                 return KeyBoardID.MODE_TEXT;
              }
 		default:
 			return KeyBoardID.MODE_TEXT;
 		}
 	}
 	
-	
+	public static boolean isEmailVariation(final int variation) {
+		return variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+				|| isWebEmailAddressVariation(variation);
+	}
+
+	private static boolean isWebEmailAddressVariation(int variation) {
+		return variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS;
+	}
+	    
 	/**
 	 * 第4步 加载主要键盘布局. <p>
 	 * 返回一个层次性的输入视图，<p>
