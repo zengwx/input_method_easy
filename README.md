@@ -1,11 +1,22 @@
-# input_method_easy
+# 输入法分析教程
 
-LatinIME 输入法分析和学习，于是编写这个DEMO进行试验，
+欢迎来到输入法的世界，让我们开始探索吧!
 
-俗话说的好，看懂 别人的代码你一定懂写，所以看了别人的代码，
+## 目录
 
-并将别人的思想试验下，能让自己更深刻.
-
-# 目录结构
-androidtest 目录----是输入法测试程序，都是一些编辑框.
-IMEasy 目录----输入法主程序.
+> androidtest - 一个测试DEMO，主要是一些编辑框，测试inputtype属性.
+> IMEasy - 主程序
+>>res
+>>src
+>>>com.android.ime
+>>>>InputMethodEasyService.java
+>>>interfaces
+>>>>KeyboardActionListener.java
+>>>keyboard
+>>>>InputView.java
+>>>>KeyBoard.java
+>>>>KeyBoardID.java
+>>>>KeyBoardParse.java
+>>>>KeyboardSwitcher.java
+>>>>KeyBoardUtils.java
+>>>>MainKeyBoardView.java

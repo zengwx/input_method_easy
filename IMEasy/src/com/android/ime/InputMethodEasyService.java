@@ -15,6 +15,8 @@ import android.view.inputmethod.InputConnection;
 import com.android.ime.interfaces.KeyboardActionListener;
 import com.android.ime.keyboard.KeyBoard;
 import com.android.ime.keyboard.KeyBoardID;
+import com.android.ime.keyboard.KeyBoardUtils;
+import com.android.ime.keyboard.KeyboardSwitcher;
 
 /**
  * 	通过调用系统的onEvaluateInputViewShow()来测试是否需要显示输入视图
@@ -23,6 +25,8 @@ import com.android.ime.keyboard.KeyBoardID;
 public class InputMethodEasyService extends InputMethodService implements KeyboardActionListener {
 	
 	private int mMode = KeyBoardID.MODE_PHONE;
+	private KeyboardSwitcher mKeyboardSwitcher = KeyboardSwitcher.getInstance();
+	
 	/**
 	 * http://api.apkbus.com/reference/android/view/inputmethod/InputConnection.html
 	 */
@@ -90,6 +94,8 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public void onInitializeInterface() {
+		/* 初始化 keyboardSwitcher */
+		mKeyboardSwitcher.initInternal(getApplicationContext(), this);
 		super.onInitializeInterface();
 	}
 	
@@ -103,7 +109,6 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting) {
 		mConnection = getCurrentInputConnection();
-		
 		Log.e(">>>>", ">>>onStartInput>>>>" + attribute);
 		mMode = getKeyboardMode(attribute); // 获取输入法键盘类型.
 		super.onStartInput(attribute, restarting);
@@ -127,41 +132,31 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 		case InputType.TYPE_CLASS_PHONE: // 显示符号键盘.
 			return KeyBoardID.MODE_PHONE;
 		case InputType.TYPE_CLASS_DATETIME: // 日期，时间. 文本输入框要求输入数字或日期时.
-			 switch (variation) {
-             case InputType.TYPE_DATETIME_VARIATION_DATE:
-                 return KeyBoardID.MODE_DATE; 
-             case InputType.TYPE_DATETIME_VARIATION_TIME:
-                 return KeyBoardID.MODE_TIME;
-             default: // InputType.TYPE_DATETIME_VARIATION_NORMAL
-                 return KeyBoardID.MODE_DATETIME;
-             }
+			switch (variation) {
+			case InputType.TYPE_DATETIME_VARIATION_DATE: // 多一个 "/"
+				return KeyBoardID.MODE_DATE;
+			case InputType.TYPE_DATETIME_VARIATION_TIME: // 多一个 ":"
+				return KeyBoardID.MODE_TIME;
+			default: // InputType.TYPE_DATETIME_VARIATION_NORMAL
+				return KeyBoardID.MODE_DATETIME; // 多两个 "/"，":"
+			}
 		case InputType.TYPE_CLASS_TEXT: // 显示输入字母的软键盘.
-//			 if (InputTypeUtils.isEmailVariation(variation)) {
-			if (true) {
-                 return KeyBoardID.MODE_EMAIL;
-             } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
-                 return KeyBoardID.MODE_URL;
-             } else if (variation == InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE) {
-                 return KeyBoardID.MODE_IM;
-             } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
-                 return KeyBoardID.MODE_TEXT;
-             } else {
-                 return KeyBoardID.MODE_TEXT;
-             }
+			if (KeyBoardUtils.isEmailVariation(variation)) {
+				return KeyBoardID.MODE_EMAIL;
+			} else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
+				return KeyBoardID.MODE_URL;
+			} else if (variation == InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE) {
+				return KeyBoardID.MODE_IM;
+			} else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+				return KeyBoardID.MODE_TEXT;
+			} else {
+				return KeyBoardID.MODE_TEXT;
+			}
 		default:
 			return KeyBoardID.MODE_TEXT;
 		}
 	}
 	
-	public static boolean isEmailVariation(final int variation) {
-		return variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-				|| isWebEmailAddressVariation(variation);
-	}
-
-	private static boolean isWebEmailAddressVariation(int variation) {
-		return variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS;
-	}
-	    
 	/**
 	 * 第4步 加载主要键盘布局. <p>
 	 * 返回一个层次性的输入视图，<p>
@@ -169,9 +164,12 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public View onCreateInputView() {
-		View view = getLayoutInflater().inflate(R.layout.main_keyboard_view,
-				null);
-		return view;
+		//  根据键盘类型->绘制出相应的类型.
+		View view = mKeyboardSwitcher.onCreateInputView(true);
+		if (view != null) {
+			return view;
+		}
+		return super.onCreateInputView();
 	}
 
 	/**
@@ -203,7 +201,7 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	}
 	
 	/**
-	 * 处理键盘输入.
+	 * 处理硬件键盘输入.
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

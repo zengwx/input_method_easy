@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 输入法主键盘布局 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.ime.keyboard.InputView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
-
-    <com.android.ime.keyboard.MainKeyBoardView
-        android:id="@+id/mainKeyBoardView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
 
     <Button
         android:id="@+id/button1"
@@ -17,10 +11,10 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+    <com.android.ime.keyboard.MainKeyBoardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</com.android.ime.keyboard.InputView>
