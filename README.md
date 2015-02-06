@@ -17,6 +17,10 @@
 >>>>KeyBoard.java
 >>>>KeyBoardID.java
 >>>>KeyBoardParse.java
->>>>KeyboardSwitcher.java
+>>>>KeyboardSwitcher.java 
 >>>>KeyBoardUtils.java
->>>>MainKeyBoardView.java
+>>>>MainKeyBoardView.java   # 键盘主要绘制view.
+
+## 注意
+
+具体输入法的分析，请详细查看代码中的注释，因为本输入法是分析谷歌原生输入法一点点写成的.
