@@ -5,20 +5,35 @@
 ## 目录
 
 > androidtest - 一个测试DEMO，主要是一些编辑框，测试inputtype属性.
+
 > IMEasy - 主程序
+
 >>res
+
 >>src
+
 >>>com.android.ime
+
 >>>>InputMethodEasyService.java
+
 >>>interfaces
+
 >>>>KeyboardActionListener.java
+
 >>>keyboard
+
 >>>>InputView.java
+
 >>>>KeyBoard.java
+
 >>>>KeyBoardID.java
+
 >>>>KeyBoardParse.java
+
 >>>>KeyboardSwitcher.java 
+
 >>>>KeyBoardUtils.java
+
 >>>>MainKeyBoardView.java   # 键盘主要绘制view.
 
 ## 注意
