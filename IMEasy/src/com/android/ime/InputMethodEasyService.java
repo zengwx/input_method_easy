@@ -70,6 +70,8 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 		super.onCreate();
 		/* 注册输入法广播 */
 		registerIMEReceiver();
+		/* 初始化 keyboardSwitcher */
+		mKeyboardSwitcher.initInternal(getApplicationContext(), this);
 	}
 	
 	/**
@@ -94,8 +96,6 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	 */
 	@Override
 	public void onInitializeInterface() {
-		/* 初始化 keyboardSwitcher */
-		mKeyboardSwitcher.initInternal(getApplicationContext(), this);
 		super.onInitializeInterface();
 	}
 	
