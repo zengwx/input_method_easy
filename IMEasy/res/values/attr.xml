@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Keyboard_Key">
+        <attr name="keyWidth" format="dimension|fraction|enum">
+            <enum name="fillRight" value="-1" />
+        </attr>
+        
+        <attr name="keyLabel" format="string" />
+        <attr name="moreKeys" format="string" />
+    </declare-styleable>
+
+</resources>

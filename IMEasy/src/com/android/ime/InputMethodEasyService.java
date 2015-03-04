@@ -1,5 +1,6 @@
 package com.android.ime;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.inputmethodservice.InputMethodService;
@@ -14,6 +15,7 @@ import android.view.inputmethod.InputConnection;
 
 import com.android.ime.interfaces.KeyboardActionListener;
 import com.android.ime.keyboard.KeyBoard;
+import com.android.ime.keyboard.KeyBoardBuild;
 import com.android.ime.keyboard.KeyBoardID;
 import com.android.ime.keyboard.KeyBoardUtils;
 import com.android.ime.keyboard.KeyboardSwitcher;
@@ -26,6 +28,8 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 	
 	private int mMode = KeyBoardID.MODE_PHONE;
 	private KeyboardSwitcher mKeyboardSwitcher = KeyboardSwitcher.getInstance();
+	private Context mContext = null;
+	private KeyBoardBuild mKeyBoardBuild = null;
 	
 	/**
 	 * http://api.apkbus.com/reference/android/view/inputmethod/InputConnection.html
@@ -71,7 +75,10 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 		/* 注册输入法广播 */
 		registerIMEReceiver();
 		/* 初始化 keyboardSwitcher */
-		mKeyboardSwitcher.initInternal(getApplicationContext(), this);
+		mKeyboardSwitcher.initInternal(mContext, this);
+		// 加载XML键盘布局.(测试)
+		mKeyBoardBuild = new KeyBoardBuild(mContext);
+		mKeyBoardBuild.load(R.xml.test_qwer);
 	}
 	
 	/**
@@ -129,7 +136,7 @@ public class InputMethodEasyService extends InputMethodService implements Keyboa
 		switch (inputType & InputType.TYPE_MASK_CLASS) {
 		case InputType.TYPE_CLASS_NUMBER: // 数字键盘.
 			return KeyBoardID.MODE_NUMBER;
-		case InputType.TYPE_CLASS_PHONE: // 显示符号键盘.
+		case InputType.TYPE_CLASS_PHONE: // 显示符号键盘. phone拨号.
 			return KeyBoardID.MODE_PHONE;
 		case InputType.TYPE_CLASS_DATETIME: // 日期，时间. 文本输入框要求输入数字或日期时.
 			switch (variation) {
