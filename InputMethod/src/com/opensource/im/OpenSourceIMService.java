@@ -5,9 +5,10 @@ import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.Toast;
+import android.widget.Button;
 
 public class OpenSourceIMService extends InputMethodService {
 
@@ -24,6 +25,20 @@ public class OpenSourceIMService extends InputMethodService {
 		number_lay = mRootView.findViewById(R.id.number_lay);
 		defualt_lay = mRootView.findViewById(R.id.defualt_lay);
 		//
+		Button button1= (Button) mRootView.findViewById(R.id.button1);
+		button1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onTextInput("1");
+			}
+		});
+		Button button2= (Button) mRootView.findViewById(R.id.button2);
+		button2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onCodeInput(KeyBoardID.CODE_ACTION_NEXT);
+			}
+		});
 		return mRootView;
 	}
 
@@ -84,8 +99,8 @@ public class OpenSourceIMService extends InputMethodService {
 				return KeyBoardID.MODE_TEXT;
 			}
 		default:
-			defualt_lay.setVisibility(View.VISIBLE);
 			number_lay.setVisibility(View.GONE);
+			defualt_lay.setVisibility(View.VISIBLE);
 			return KeyBoardID.MODE_TEXT;
 		}
 	}
@@ -145,7 +160,7 @@ public class OpenSourceIMService extends InputMethodService {
 		mConnection.endBatchEdit();
 	}
 
-	public void onCodeInput(int primaryCode, int x, int y) {
+	public void onCodeInput(int primaryCode) {
 		// IME_ACTION_GO: go操作，将用户带入到一个该输入框的目标的动作。确认键将不会有icon，只有label: GO
 		switch (primaryCode) {
 		case KeyBoardID.CODE_DELETE:

@@ -24,6 +24,14 @@
                 android:name="android.view.im"
                 android:resource="@xml/method" />
         </service>
+        <!-- Optional activities. A good idea to have some user settings. -->
+        <activity
+            android:name="com.opensource.im.SettingsActivity"
+            android:label="输入法设置" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>	
 
     </application>
 
