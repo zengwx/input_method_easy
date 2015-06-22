@@ -2,51 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/number_lay"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
+            android:nextFocusRight="@+id/button3"
             android:text="1" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
             android:text="2" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
             android:text="3" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal" >
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
             android:text="4" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
             android:text="5" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/keyvalue_style"
             android:text="6" />
     </LinearLayout>
 
@@ -56,16 +56,19 @@
         android:orientation="horizontal" >
 
         <Button
+            style="@style/keyvalue_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7" />
 
         <Button
+            style="@style/keyvalue_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="8" />
 
         <Button
+            style="@style/keyvalue_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="9" />
